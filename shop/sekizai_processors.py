@@ -22,7 +22,7 @@ def compress(context, data, name):
     """
     # separate compressable from uncompressable files
     parser = get_class(settings.COMPRESS_PARSER)(data)
-    compressor = Compressor()
+    compressor = Compressor(name)
     compressable_elements, expanded_elements, deferred_elements = [], [], []
     if name == 'js':
         for elem in parser.js_elems():

@@ -20,6 +20,11 @@ class JSONSerializerField(serializers.Field):
     """
     Serializer field which transparently bypasses its object instead of serializing/deserializing.
     """
+    def __init__(self, **kwargs):
+        # CRn adds treatments for encoder to solve bug using postgres
+        encoder = kwargs.pop('encoder', None)
+        super(JSONSerializerField, self).__init__(**kwargs)
+
     def to_representation(self, obj):
         return obj
 
