@@ -31,6 +31,10 @@ class MissingPlugin(CommandError):
 class Command(BaseCommand):
     help = "Commands for Django-SHOP."
 
+    def __init__(self, stdout=None, stderr=None, no_color=False):
+        super().__init__(stdout=None, stderr=None, no_color=False)
+        self._created_cms_pages = []
+
     def add_arguments(self, parser):
         parser.add_argument(
             'subcommand',
@@ -201,7 +205,6 @@ Usage:
         from cms.models.pluginmodel import CMSPlugin
         from cms.utils.i18n import get_public_languages
 
-        self._created_cms_pages = []
         default_language = get_public_languages()[0]
 
         # check for catalog pages
