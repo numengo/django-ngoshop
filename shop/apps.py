@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class ShopConfig(AppConfig):
     name = 'shop'
+    label = 'shop'
     verbose_name = _("Shop")
 
     def ready(self):

@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from io import BytesIO
 from future.utils import with_metaclass
 from ngoschema.protocols import ObjectProtocol, SchemaMetaclass
-from ngoschema.repositories import repository_registry
+from ngoschema.registries import repositories_registry
 
 from ngocms.repositories import ImageRepository, PageRepository
 from django.core.files import File as DjangoFile
