@@ -54,5 +54,6 @@ setup(
         'django-admin-sortable2>=0.7.4',
         'django-formtools>1.0',
         'djangocms-cascade>1.1',
+        'django-coupons==1.1.0',
     ],
 )

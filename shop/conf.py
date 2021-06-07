@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import string
 
 
 class DefaultSettings(object):
@@ -320,6 +321,34 @@ class DefaultSettings(object):
         }
         cascade_forms.update(self._setting('SHOP_CASCADE_FORMS', {}))
         return cascade_forms
+
+    @property
+    def SHOP_COUPON_TYPES(self):
+        COUPON_TYPES = getattr(self._setting, 'COUPONS_COUPON_TYPES', (
+        ('monetary', 'Money based coupon'),
+        ('percentage', 'Percentage discount'),
+        ('virtual_currency', 'Virtual currency'),
+    ))
+
+    @property
+    def SHOP_CODE_LENGTH(self):
+        return getattr(self._setting, 'COUPONS_CODE_LENGTH', 15)
+
+    @property
+    def SHOP_CODE_CHARS(self):
+        return getattr(self._setting, 'COUPONS_CODE_CHARS', string.ascii_letters + string.digits)
+
+    @property
+    def SHOP_SEGMENTED_CODES(self):
+        return getattr(self._setting, 'COUPONS_SEGMENTED_CODES', False)
+
+    @property
+    def SHOP_SEGMENT_LENGTH(self):
+        return getattr(self._setting, 'COUPONS_SEGMENT_LENGTH', 4)
+
+    @property
+    def SHOP_SEGMENT_SEPARATOR(self):
+        return getattr(self._setting, 'COUPONS_SEGMENT_SEPARATOR', "-")
 
     def __getattr__(self, key):
         if not key.startswith('SHOP_'):
