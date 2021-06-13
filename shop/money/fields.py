@@ -7,9 +7,13 @@ from django import forms
 from django.db import models
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
+from django.utils.text import format_lazy
 from shop.conf import app_settings
+from django.conf import settings
 from shop.money.iso4217 import CURRENCIES
 from shop.money.money_maker import MoneyMaker, AbstractMoney
+
+from ..currency_utils import get_currency
 
 
 class MoneyFieldWidget(forms.widgets.NumberInput):
@@ -132,3 +136,31 @@ class MoneyField(models.DecimalField):
         defaults.update(**kwargs)
         formfield = super(MoneyField, self).formfield(**defaults)
         return formfield
+
+
+class MultipleCurrenciesField(object):
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
+
+    def contribute_to_class(self, cls, name):
+        self.name = name
+        setattr(cls, self.name, self)
+        for currency_code, currency_name in settings.SHOP_CURRENCIES:
+            field_name = '%s_%s' % (name, currency_code)
+            currency_code = currency_code.upper()
+            field = MoneyField(*self.args, currency=currency_code, **self.kwargs)
+            field.contribute_to_class(cls, field_name)
+            field.verbose_name = format_lazy('%s (%s)', field.verbose_name, currency_code)
+
+    def __get__(self, instance, instance_type=None):
+        if not instance:
+            return ''
+        return getattr(instance, '%s_%s' % (self.name, get_currency()))
+
+    def __set__(self, instance, value):
+        setattr(instance, '%s_%s' % (self.name, get_currency()), value)
+
+    def __delete__(self, instance):
+        delattr(instance, '%s_%s' % (self.name, get_currency()))
+
